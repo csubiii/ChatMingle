@@ -4,6 +4,6 @@ export interface UserDocument {
   email: string,
   password: string,
   profilePicture: string,
-  bio: string,
+  bio: string | null,
   friends: string[],
 }
