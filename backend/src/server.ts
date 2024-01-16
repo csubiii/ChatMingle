@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import { connectToDatabase } from './db/connection';
 import registrationRouter from './routes/registration.route';
-import { userAuthenticate } from './controllers/userAuthenticate.controller';
 const punycode = require('punycode/');
 
 const app = express();
@@ -17,7 +16,6 @@ const PORT_STRING = process.env.PORT || '3000';
 const PORT_NUMBER = parseInt(PORT_STRING, 10);
 
 app.use(registrationRouter);
-app.use(userAuthenticate);
 
 app.listen(PORT_NUMBER, () => {
    console.log("Server Listening on PORT:", process.env.PORT || '3000');

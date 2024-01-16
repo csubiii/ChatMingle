@@ -4,6 +4,5 @@ declare namespace NodeJS {
     DB_CONN_STRING: string;
     DB_NAME: string;
     USER_COLLECTION_NAME: string;
-    JWT_SECRET: string;
   }
 }
