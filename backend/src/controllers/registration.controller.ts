@@ -1,18 +1,19 @@
 import { Request, Response } from "express";
 import * as dotenv from "dotenv";
 import { User } from "../models/user.model";
+import { hashPassword } from "../utils/encryption";
 
 dotenv.config();
 
 export const registration = async (req: Request, res: Response) => {
   try {
     const { username, email, password } = req.body;
-    console.log(`username: ${username}, email: ${email}, password: ${password}`);
+    console.log(`username: ${username}, email: ${email}`);
 
     const user = new User({
       username,
       email,
-      password,
+      password: await hashPassword(password),
       profilePicture: '',
       bio: '',
       friends: [],
