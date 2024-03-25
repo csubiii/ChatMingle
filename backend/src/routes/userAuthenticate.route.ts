@@ -1,13 +1,7 @@
-import bcrypt from 'bcrypt';
+import express from 'express';
+import { userAuthenticate } from '../controllers/userAuthenticate.controller';
+const userAuthenticateRouter = express.Router();
 
-const saltRounds = 10;
+userAuthenticateRouter.post("/api/v1/userAuthenticate", userAuthenticate)
 
-export const hashPassword = async (password: string): Promise<string> => {
-  const hashedPassword = await bcrypt.hash(password, saltRounds);
-  return hashedPassword;
-};
-
-export const comparePasswords = async (password: string, hashedPassword: string): Promise<boolean> => {
-  const match = await bcrypt.compare(password, hashedPassword);
-  return match;
-};
+export default userAuthenticateRouter;

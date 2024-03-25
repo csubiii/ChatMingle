@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 
 export interface UserDocument {
   username: string,
@@ -6,4 +7,10 @@ export interface UserDocument {
   profilePicture: string,
   bio: string | null,
   friends: string[],
+}
+
+export interface JwtPayload {
+  _id: ObjectId;
+  username: string;
+  email: string;
 }

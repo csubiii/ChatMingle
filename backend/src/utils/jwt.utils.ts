@@ -1,23 +1,21 @@
-import jwt, { SignOptions } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import * as dotenv from "dotenv";
+import { JwtPayload } from '../types/types';
 
 dotenv.config();
 
-export const generateToken = (payload: object): string => {
-  const signInOptions: SignOptions = {
-    algorithm: 'RS256',
-    expiresIn: '1h'
-  };
-
-  return jwt.sign(payload, process.env.JWT_SECRET || "", signInOptions);
+export const generateToken = (payload: JwtPayload): string => {
+  console.log("check Payload: ", payload);
+  return jwt.sign(payload, process.env.JWT_SECRET || "", { expiresIn: "1days" });
 };
 
 export const verifyJwt = (token: string) => {
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || "")
-    console.log(decoded)
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || "") as JwtPayload;
+    console.log("jwt: ", decoded, decoded.email, decoded.username, decoded._id);
     return decoded;
   } catch (error: any) {
-    return { payload: null, expired: error.message.includes("JWT token expired") }
+    return { payload: null, expired: error.message.includes("JWT token expired") };
   }
 };
+
