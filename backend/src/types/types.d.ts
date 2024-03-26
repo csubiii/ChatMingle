@@ -10,6 +10,7 @@ export interface UserDocument {
 }
 
 export interface JwtPayload {
+  expired?: boolean;
   _id: ObjectId;
   username: string;
   email: string;

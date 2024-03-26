@@ -6,7 +6,7 @@ dotenv.config();
 
 export const generateToken = (payload: JwtPayload): string => {
   console.log("check Payload: ", payload);
-  return jwt.sign(payload, process.env.JWT_SECRET || "", { expiresIn: "1days" });
+  return jwt.sign(payload, process.env.JWT_SECRET || "", { expiresIn: "15s" });
 };
 
 export const verifyJwt = (token: string) => {
@@ -15,7 +15,7 @@ export const verifyJwt = (token: string) => {
     console.log("jwt: ", decoded, decoded.email, decoded.username, decoded._id);
     return decoded;
   } catch (error: any) {
-    return { payload: null, expired: error.message.includes("JWT token expired") };
+    return { expired: true };
   }
 };
 

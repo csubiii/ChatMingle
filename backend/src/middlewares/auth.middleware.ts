@@ -13,15 +13,21 @@ export const authenticateToken = async (req: Request, res: Response, next: NextF
 
   try {
     const decodedToken = verifyJwt(token) as JwtPayload;
+    
+    console.log(Object.keys(decodedToken))
+
+    if (decodedToken && decodedToken.expired) {
+      return res.status(403).json({ message: 'Forbidden: Token expired or Invalid' });
+    }
 
     const user = await User.findById(decodedToken._id);
 
     if (!user) {
-      return res.status(403).json({ message: 'Forbidden: Invalid token' });
+      return res.status(403).json({ message: 'Forbidden: Invalid user' });
     }
 
     next();
   } catch (error) {
-    return res.status(403).json({ message: 'Forbidden: Invalid token' });
+    return res.status(500).json({ message: 'Internal Server Error' });
   }
 };
