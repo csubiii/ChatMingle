@@ -3,10 +3,13 @@ import dotenv from 'dotenv';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { connectToDatabase } from './db/connection';
-import registrationRouter from './routes/registration.route';
-import userAuthenticateRouter from './routes/userAuthenticate.route';
-import protectedRouter from './routes/protected.route';
+import registrationRouter from './api/routes/registration.route'
+import userAuthenticateRouter from './api/routes/userAuthenticate.route';
+import protectedRouter from './api/routes/protected.route';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import sendFriendRequestRouter from './api/routes/sendFriendRequest.route';
+import acceptFriendRequestRouter from './api/routes/acceptFriendRequest.route';
 
 dotenv.config();
 
@@ -24,11 +27,14 @@ const io = new Server(httpServer, {
 });
 
 app.use(cors())
+app.use(cookieParser());
 app.use(express.json());
 
 app.use(registrationRouter);
 app.use(userAuthenticateRouter);
 app.use(protectedRouter);
+app.use(sendFriendRequestRouter);
+app.use(acceptFriendRequestRouter)
 
 io.on("connection", (socket) => {
    console.log("A user connected");

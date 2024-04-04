@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import * as dotenv from "dotenv";
 import { User } from "../../models/user.model";
 import { comparePasswords } from "../../utils/encryption";
-import { generateToken } from "../../utils/jwt.utils";
+import { generateRefreshToken, generateToken } from "../../utils/jwt.utils";
 import { JwtPayload } from "../../types/types";
 
 dotenv.config();
@@ -11,9 +11,9 @@ export const userAuthenticate = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
 
-    const isUserExist = await User.findOne({email}).exec();
+    const user = await User.findOne({ email }).exec();
 
-    if (!isUserExist) {
+    if (!user) {
       return res.status(404).json({
         status: 404,
         success: false,
@@ -21,7 +21,7 @@ export const userAuthenticate = async (req: Request, res: Response) => {
       });
     }
 
-    const matchPassword = await comparePasswords(password, isUserExist.password);
+    const matchPassword = await comparePasswords(password, user.password);
 
     if (!matchPassword) {
       return res.status(400).json({
@@ -32,28 +32,33 @@ export const userAuthenticate = async (req: Request, res: Response) => {
     }
 
     const payload: JwtPayload = {
-      _id: isUserExist?._id,
-      username: isUserExist?.username,
-      email: isUserExist?.email,
+      _id: user._id,
+      username: user.username,
+      email: user.email,
     };
 
-   
-    // Generate the access token
     const accessToken = generateToken(payload);
 
-    // Set the access token in the cookie
-    res.cookie('access_token', accessToken, {
+    const refreshToken = generateRefreshToken(payload);
+
+    res.cookie("access_token", accessToken, {
       httpOnly: true,
       secure: true,
-      maxAge: 45 * 1000,
+      maxAge: 15 * 1000,
     });
 
-    // If token verification succeeds, send the response
+    res.cookie("refresh_token", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
     res.status(200).json({
       status: 200,
       success: true,
       message: "Login success",
       accessToken: accessToken,
+      refreshToken: refreshToken,
     });
   } catch (error) {
     console.error(error);
