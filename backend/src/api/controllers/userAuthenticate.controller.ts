@@ -12,22 +12,22 @@ export const userAuthenticate = async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email }).exec();
-
+    
     if (!user) {
       return res.status(404).json({
         status: 404,
         success: false,
-        message: "User not found",
+        message: "Incorrect password or email",
       });
     }
-
+    
     const matchPassword = await comparePasswords(password, user.password);
 
     if (!matchPassword) {
       return res.status(400).json({
         status: 400,
         success: false,
-        message: "Incorrect password",
+        message: "Incorrect password or email",
       });
     }
 
