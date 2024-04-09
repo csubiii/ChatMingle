@@ -6,7 +6,7 @@ export interface UserDocument {
   password: string,
   profilePicture: string,
   bio: string | null,
-  friends: string[],
+  friends: ObjectId[],
 }
 
 export interface JwtPayload {

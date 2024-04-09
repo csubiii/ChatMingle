@@ -4,6 +4,10 @@ import { JwtPayload } from '../types/types';
 
 dotenv.config();
 
+export const generateRefreshToken = (payload: JwtPayload): string => {
+  return jwt.sign(payload, process.env.JWT_SECRET || "", { expiresIn: "7days" });
+};
+
 export const generateToken = (payload: JwtPayload): string => {
   console.log("check Payload: ", payload);
   return jwt.sign(payload, process.env.JWT_SECRET || "", { expiresIn: "15s" });
